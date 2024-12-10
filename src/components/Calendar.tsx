@@ -177,7 +177,7 @@ const Calendar = () => {
               type="submit"
             >
               Add
-            </button>{" "}
+            </button>
             {/* Button to submit new event */}
           </form>
         </DialogContent>
