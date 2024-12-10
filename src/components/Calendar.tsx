@@ -35,6 +35,9 @@ const Calendar = () => {
 
 
   const handleEventClick = (selected: EventClickArg) => {
+    console.log('got an event ', selected)
+
+
     // Prompt user for confirmation before deleting an event
     if (
       window.confirm(
@@ -53,6 +56,9 @@ const Calendar = () => {
   };
 
   const handleAddEvent = (e: React.FormEvent) => {
+console.log('got an AddEvent ', e)
+
+
     e.preventDefault();
     if (newEventTitle && selectedDate) {
       const calendarApi = selectedDate.view.calendar; // Get the calendar API instance.
@@ -84,12 +90,52 @@ const Calendar = () => {
               No Events Present
             </div>
           )}
+
+          {currentEvents.length > 0 &&
+            currentEvents.map((event: EventApi) => (
+              <li
+                className="border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800"
+                key={event.id}
+              >
+                {event.title}
+                <br />
+                <label className="text-slate-950">
+                  {formatDate(event.start!, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}{" "}
+                  {/* Format event start date */}
+                </label>
+              </li>
+            ))}
         </ul>
 
 
       </div>
       <div className="w-9/12 mt-8">
-
+        <FullCalendar
+          height={"85vh"}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Initialize calendar with required plugins.
+          headerToolbar={{
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+          }} // Set header toolbar options.
+          initialView="dayGridMonth" // Initial view mode of the calendar.
+          editable={true} // Allow events to be edited.
+          selectable={true} // Allow dates to be selectable.
+          selectMirror={true} // Mirror selections visually.
+          dayMaxEvents={true} // Limit the number of events displayed per day.
+          select={handleDateClick} // Handle date selection to create new events.
+          eventClick={handleEventClick} // Handle clicking on events (e.g., to delete them).
+          eventsSet={(events) => setCurrentEvents(events)} // Update state with current events whenever they change.
+          initialEvents={
+            typeof window !== "undefined"
+              ? JSON.parse(localStorage.getItem("events") || "[]")
+              : []
+          } // Initial events loaded from local storage.
+        />
       </div>
     </div>
   )
