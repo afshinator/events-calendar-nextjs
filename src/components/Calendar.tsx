@@ -71,7 +71,28 @@ const Calendar = () => {
     }
   };
 
-  return (<div>calnedar here</div>)
+  return (
+    <div className="flex w-full px-10 justify-start items-start gap-8">
+      <div className="w-3/12">
+        <div className="py-10 text-2xl font-extrabold px-7">
+          Calendar Events
+        </div>
+
+        <ul className="space-y-4">
+          {currentEvents.length <= 0 && (
+            <div className="italic text-center text-gray-400">
+              No Events Present
+            </div>
+          )}
+        </ul>
+
+
+      </div>
+      <div className="w-9/12 mt-8">
+
+      </div>
+    </div>
+  )
 }
 
 export default Calendar
