@@ -27,6 +27,24 @@ const Calendar = () => {
   const [newEventTitle, setNewEventTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
 
+  useEffect(() => {
+    // Load events from local storage when the component mounts
+    if (typeof window !== "undefined") {
+      const savedEvents = localStorage.getItem("events");
+      if (savedEvents) {
+        setCurrentEvents(JSON.parse(savedEvents));
+      }
+    }
+  }, []);
+
+
+  useEffect(() => {
+    // Save events to local storage whenever they change
+    if (typeof window !== "undefined") {
+      localStorage.setItem("events", JSON.stringify(currentEvents));
+    }
+  }, [currentEvents]);
+
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
@@ -56,7 +74,7 @@ const Calendar = () => {
   };
 
   const handleAddEvent = (e: React.FormEvent) => {
-console.log('got an AddEvent ', e)
+    console.log('got an AddEvent ', e)
 
 
     e.preventDefault();
@@ -137,6 +155,33 @@ console.log('got an AddEvent ', e)
           } // Initial events loaded from local storage.
         />
       </div>
+
+
+      {/* Dialog for adding new events */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Event Details</DialogTitle>
+          </DialogHeader>
+          <form className="space-x-5 mb-4" onSubmit={handleAddEvent}>
+            <input
+              type="text"
+              placeholder="Event Title"
+              value={newEventTitle}
+              onChange={(e) => setNewEventTitle(e.target.value)} // Update new event title as the user types.
+              required
+              className="border border-gray-200 p-3 rounded-md text-lg"
+            />
+            <button
+              className="bg-green-500 text-white p-3 mt-5 rounded-md"
+              type="submit"
+            >
+              Add
+            </button>{" "}
+            {/* Button to submit new event */}
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
